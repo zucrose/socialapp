@@ -53,6 +53,12 @@ functions.getAllPosts=()=>{
     return sanityClient.fetch(`*[_type == "post"]{
         ...,
         "username":author->username,
+        "profilepic":author->photo{
+            asset->{
+                _id,
+                url
+            }
+        },
         photo{
             asset->{
                 _id,
@@ -68,12 +74,18 @@ functions.getPostsOfFollowing = (username)=>{
             "posts": *[_type== "post" && references(^._id)]{
             ...,
             "username": author->username,
+            "profilepic":author->photo{
+                asset->{
+                    _id,
+                    url
+                }
+            },
             photo{
                 asset->{
                     _id,
                     url
                 }
-            }
+            
           }
         }
     }`,{username});
