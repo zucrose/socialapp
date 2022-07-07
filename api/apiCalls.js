@@ -19,6 +19,7 @@ functions.getProfile = (user) => {
         ...,
         "following": count(following),
         "followers": *[_type == "user" && references(^._id)],
+        "liked_by": *[_type == "post" && references(^._id) && author->username != $username],
         photo{
           asset->{
             _id,
@@ -46,6 +47,7 @@ functions.createPost =(user,caption,image)=>{
             photo:{ asset:{_ref:data._id}},
             description: caption,
             created_at: new Date(),
+            likes:[],
         });
     }));
 }
@@ -67,29 +69,32 @@ functions.getAllPosts=()=>{
         }
     }`);
 };
-functions.getPostsOfFollowing = (username)=>{
+functions.getPostsOfFollowing = (username) => {
     return sanityClient.fetch(
-        `*[_type == "user" && username == $username]{
-        following[]->{
-            "posts": *[_type== "post" && references(^._id)]{
-            ...,
-            "username": author->username,
-            "profilepic":author->photo{
-                asset->{
-                    _id,
-                    url
-                }
-            },
-            photo{
-                asset->{
-                    _id,
-                    url
-                }
-            
+      `*[_type == "user" && username == $username]{
+      following[]->{
+        "posts": *[_type == "post" && references(^._id) && author->_id == (^._id)]{
+          ...,
+          "username": author->username,
+          "profilepic":author->photo{
+              asset->{
+                _id,
+                url
+              }
+          },
+          
+          photo{
+            asset->{
+              _id,
+              url
+            }
           }
         }
-    }`,{username});
-};
+      }
+    }`,
+      { username }
+    );
+  };
 
 functions.searchForUsername=(text)=>{
     return sanityClient.fetch(`*[_type=="user" && username match " ${text}*"]{
@@ -108,6 +113,12 @@ functions.getPosts=(username)=>{
     return sanityClient.fetch(`*[_type == "post" && author->username == $username]{
         ...,
         "username":author->username,
+        "profilepic":author->photo{
+            asset->{
+              _id,
+              url
+            }
+        },
         photo{
             asset->{
                 _id,
@@ -117,7 +128,24 @@ functions.getPosts=(username)=>{
         
     }`,{username})
 }
-
+functions.getPostWithId=(id)=>{
+  return sanityClient.fetch(`*[_type == "post" && _id == $id ]{   ...,
+    "username":author->username,
+    "profilepic":author->photo{
+        asset->{
+          _id,
+          url
+        }
+    },
+    photo{
+        asset->{
+            _id,
+            url
+        }
+    }
+    
+}`,{id});
+}
 functions.updateProfile=(user,first_name,last_name,bio,image)=>{
     if(image){
          return sanityClient.assets.upload("image",createReadStream(image.path),{filename:basename(image.path)}).
@@ -146,5 +174,19 @@ functions.removeFollower=(user,followingId)=>{
     return functions.getUserId(user).then((ids)=>sanityClient.patch(ids[0]._id)
     .unset([`following[_ref=="${followingId}"]`])
     .commit());
+}
+
+functions.addLike=(postid,user)=>{
+    return functions.getUserId(user).then( (ids)=>
+    sanityClient.patch(postid)
+    .setIfMissing({likes:[]})
+    .insert("after","likes[-1]",[{_ref:ids[0]._id,_key:nanoid(),_type:"reference"}])
+    .commit());
+}
+
+functions.removeLike=(postid,user)=>{
+  return functions.getUserId(user).then((ids)=>sanityClient.patch(postid)
+  .unset([`likes[_ref=="${ids[0]._id}"]`])
+  .commit());
 }
 export default functions;

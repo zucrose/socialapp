@@ -3,12 +3,15 @@ import {useParams} from 'react-router-dom';
 import {Button} from "react-bootstrap";
 import EditProfile from "./EditProfile";
 import "../css/Profile.css"
+import ExpandPost from "./ExpandPost";
 export default function Profile({user,setAlert}){
     const [profileData,setProfileData]=useState({});
     const [posts,setPosts]=useState({});
     const [following,setFollowing]=useState(false);
     const [owner,setOwner]=useState(false);
     const [editing,setEditing]=useState(false);
+    const [Open,SetOpen]=useState(false);
+    const [PostOpened,SetPostOpened]=useState(null);
     const params=useParams();
     useEffect(()=>{
         updateProfile(params.username)
@@ -120,11 +123,15 @@ export default function Profile({user,setAlert}){
         <div className="break"></div>
         <div className="profile-posts-wrapper">
           <div className="profile-posts">
-            {posts && posts.length>0?posts.map((post,idx)=>{return <img src={post.photo.asset.url} key={idx}/>}):null}
+            {posts && posts.length>0?posts.map((post,idx)=>{return <div onClick={()=>{SetOpen(true);SetPostOpened(post)}}><img src={post.photo.asset.url} key={idx}/></div>}):null}
           </div>
         </div>
 
         
+        {PostOpened?<ExpandPost postid={PostOpened._id} Open={Open} setOpen={SetOpen} user={user}/>:null}
     </div>
+    
+    
+
  
 }

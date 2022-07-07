@@ -4,7 +4,7 @@ import functions from "./apiCalls.js";
 import multer from "multer";
 
 
-const {createUser,getProfile,createPost,getAllPosts,getPostsOfFollowing,searchForUsername,getPosts,updateProfile,addFollower,removeFollower}=functions;
+const {createUser,getProfile,createPost,getAllPosts,getPostsOfFollowing,searchForUsername,getPosts,updateProfile,addFollower,removeFollower,addLike,removeLike,getPostWithId}=functions;
 const app=express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:false}));
@@ -30,6 +30,12 @@ app.get("/getProfile",(req,res)=>{
     getProfile(user).then((data)=> {res.json(data)
     console.log(data)});
 });
+app.get("/getPostwithId",(req,res)=>{
+    const id=req.query.id;
+    getPostWithId(id).then((data)=> {res.json(data)
+    console.log("sek",data)});
+});
+
 
 app.post("/createPost",upload.single("file"),(req,res)=>{
     const body = req.body;
@@ -73,11 +79,24 @@ app.post("/updateProfile",upload.single("file"),(req,res)=>{
 
 app.post("/addFollower",(req,res)=>{
     const body= req.body;
-    addFollower(body.user,body.id).then((data)=>res.json(data));
+    addFollower(body.user,body.id).then((data)=>{
+        console.log(data);
+        res.json(data)});
 })
-
+app.post("/addLike",(req,res)=>{
+    const body= req.body;
+    addLike(body.postid,body.user).then((data)=>{
+    console.log(data,data.likes);
+    res.json(data);
+  });
+    
+})
 app.delete("/removeFollower",(req,res)=>{
     const body= req.body;
     removeFollower(body.user,body.id).then((data)=>res.json(data));
+})
+app.delete("/removeLike",(req,res)=>{
+    const body= req.body;
+    removeLike(body.postid,body.user).then((data)=>res.json(data));
 })
 app.listen(3001,()=>{console.log("server running")});
