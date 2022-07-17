@@ -12,3 +12,17 @@ a:active { text-decoration: none; }
 .cardstyling:hover{
     background-color: #e5fcef;
 }
+.fa-heart:hover{
+    color:black
+
+}
+.fa-heart-o:hover{
+    color:red
+
+}
+.fa-trash{
+    color:gray
+}
+.fa-trash:hover{
+    color:black
+}

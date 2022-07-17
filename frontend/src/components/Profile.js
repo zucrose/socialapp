@@ -12,6 +12,7 @@ export default function Profile({user,setAlert}){
     const [editing,setEditing]=useState(false);
     const [Open,SetOpen]=useState(false);
     const [PostOpened,SetPostOpened]=useState(null);
+   
     const params=useParams();
     useEffect(()=>{
         updateProfile(params.username)
@@ -128,7 +129,7 @@ export default function Profile({user,setAlert}){
         </div>
 
         
-        {PostOpened?<ExpandPost postid={PostOpened._id} Open={Open} setOpen={SetOpen} user={user}/>:null}
+        {PostOpened?<ExpandPost postprop={PostOpened} Open={Open} setOpen={SetOpen} user={user} />:null}
     </div>
     
     

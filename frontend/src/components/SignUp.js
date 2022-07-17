@@ -18,6 +18,7 @@ export default function SignUp({setAlert,setUser}){
                 firstName:firstName,
                 lastName:lastName,
                 username:username,
+              
             })  
           }
           fetch("/createUser",requestOptions).then((_res)=>{
@@ -52,6 +53,7 @@ export default function SignUp({setAlert,setUser}){
             <Form.Label>Last Name</Form.Label>
             <Form.Control type="text" placeholder="Last name" onInput={updateLastName}/>
         </Form.Group>
+               
         <Button variant="primary" type="button" onClick={createAccount}>Create Account</Button>
     </Form>
 }

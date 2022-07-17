@@ -13,7 +13,7 @@ import '../css/App.css';
 
 function App() {
   const [alert,setAlert]=useState(null);
-  const [user,setUser]=useState("");
+  const [user,setUser]=useState(null);
   return (
     <div className="fill-parent">
       <BrowserRouter>

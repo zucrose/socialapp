@@ -9,6 +9,7 @@ export default function AllPosts({user}){
     const [AllPostsData,setAllPosts]=useState(null);
     const [Open,setOpen]=useState(false);
     const [PostOpened,SetPostOpened]=useState(null);
+   
 
     useEffect(()=>{
         if(!user){
@@ -17,20 +18,18 @@ export default function AllPosts({user}){
         }
         else{
             fetch("/getPostsOfFollowing?user="+user).then((res)=>res.json())
-            .then((data)=> {setAllPosts(data);console.log(AllPostsData)}).catch((err)=>console.error(err));
+            .then((data)=> setAllPosts(data)).catch((err)=>console.error(err));
         }
     },[user]);
     console.log(AllPostsData);
    
     return <><div className="center mt-3">
         {AllPostsData? AllPostsData.map((post,index)=>(
-               
-               <div className="center m-2" style={{min_width:"30%" , maxWidth:"400px"}} key={index} onClick={()=>{setOpen(true);
-               SetPostOpened(post)}}>
+                   
+               <div className="center m-2" style={{min_width:"40%" , maxWidth:"45%"}} key={index} >
                 
                 <Card sx={{
                             backgroundColor: '#e5fcfb',
-                            minWidth: 320,
                             position: 'relative',
                             boxShadow: '0 8px 24px 0 rgba(0,0,0,0.12)',
                             overflow: 'visible',
@@ -38,7 +37,12 @@ export default function AllPosts({user}){
                            
 
                             
-                        }} className="cardstyling">
+                        }} className="cardstyling"
+                        onClick={()=>{setOpen(true);
+                         SetPostOpened(post);
+                         console.log("this post was clicked",PostOpened,index);
+                         }}
+                            >
                   <CardHeader title={ 
                     <Link  className="lead" to={"/profile/"+post.username}>
                           {post.username}
@@ -56,15 +60,16 @@ export default function AllPosts({user}){
                     </div>
                     <CardContent>
                     <div className="d-flex justify-content-between">
-                                 <div className="">
+                                 <div >
                                     
-                                       <Typography className="text-muted">{post.likes.length} Likes</Typography>
+                                       <Typography  gutterBottom className="text-muted">{post.likes.length} Likes</Typography>
 
                                  </div>                       
                          </div>
-                      
-                        <Typography>{post.description}</Typography>
-                        <Typography className="text-muted">{post.created_at}</Typography>
+                         
+                        <Typography variant="h6" gutterBottom >{post.description}</Typography>
+             
+            
                     </CardContent>
                    
                 </Card>
@@ -75,6 +80,6 @@ export default function AllPosts({user}){
       
     </div>;
      {(PostOpened)?
-    <ExpandPost postid={PostOpened._id} Open={Open} setOpen={setOpen} user={user}/>:null}
+        <ExpandPost postprop={PostOpened} Open={Open} setOpen={setOpen} user={user}/>:null}
     </>
 }

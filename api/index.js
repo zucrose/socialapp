@@ -4,7 +4,7 @@ import functions from "./apiCalls.js";
 import multer from "multer";
 
 
-const {createUser,getProfile,createPost,getAllPosts,getPostsOfFollowing,searchForUsername,getPosts,updateProfile,addFollower,removeFollower,addLike,removeLike,getPostWithId}=functions;
+const {createUser,getProfile,createPost,getAllPosts,getPostsOfFollowing,searchForUsername,getPosts,updateProfile,addFollower,removeFollower,addLike,removeLike,getPostWithId,addComment,removeComment}=functions;
 const app=express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:false}));
@@ -27,13 +27,16 @@ app.post("/createUser",(req,res)=>{
 });
 app.get("/getProfile",(req,res)=>{
     const user=req.query.user;
-    getProfile(user).then((data)=> {res.json(data)
-    console.log(data)});
+    getProfile(user).then((data)=> {
+    console.log("getting profile",data);
+    return res.json(data);})
 });
-app.get("/getPostwithId",(req,res)=>{
+app.get("/getPostWithId",(req,res)=>{
     const id=req.query.id;
-    getPostWithId(id).then((data)=> {res.json(data)
-    console.log("sek",data)});
+    getPostWithId(id).then((data)=> {
+    console.log("getting posts with specific id",data)
+    return  res.json(data);});
+   
 });
 
 
@@ -58,15 +61,16 @@ app.get("/searchForUsername",(req,res)=>{
 });
 app.get("/getAllPosts",(req,res)=>{
 
-    getAllPosts().then((data)=>{res.json(data)
-    console.log(data);
+    getAllPosts().then((data)=>{
+    console.log("getting posts",data);
+    return res.json(data);
   });
 });
 
 app.get("/getPosts",(req,res)=>{
     const user=req.query.user;
     getPosts(user).then((data)=>{res.json(data)
-        console.log(data);
+        console.log("getting posts",data);
     });
     
     
@@ -86,8 +90,15 @@ app.post("/addFollower",(req,res)=>{
 app.post("/addLike",(req,res)=>{
     const body= req.body;
     addLike(body.postid,body.user).then((data)=>{
-    console.log(data,data.likes);
-    res.json(data);
+    console.log("Logging likes ",data);
+     return res.json(data);
+  });
+    
+})
+app.post("/addComment",(req,res)=>{
+    const body= req.body;
+    addComment(body.postid,body.username,body.description).then((data)=>{
+     console.log(data); return res.json(data)
   });
     
 })
@@ -97,6 +108,10 @@ app.delete("/removeFollower",(req,res)=>{
 })
 app.delete("/removeLike",(req,res)=>{
     const body= req.body;
-    removeLike(body.postid,body.user).then((data)=>res.json(data));
+    removeLike(body.postid,body.user).then((data)=>{ console.log("like removed",data); return res.json(data)});
+})
+app.delete("/removeComment",(req,res)=>{
+    const body= req.body;
+    removeComment(body.postid,body.key).then((data)=>res.json(data));
 })
 app.listen(3001,()=>{console.log("server running")});

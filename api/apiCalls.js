@@ -10,6 +10,7 @@ functions.createUser=(firstName,lastName,username)=>{
         first_name:firstName,
         last_name:lastName,
         username:username,
+  
         created_at: new Date(),
     });
 };
@@ -48,6 +49,7 @@ functions.createPost =(user,caption,image)=>{
             description: caption,
             created_at: new Date(),
             likes:[],
+            comments:[],
         });
     }));
 }
@@ -55,6 +57,7 @@ functions.getAllPosts=()=>{
     return sanityClient.fetch(`*[_type == "post"]{
         ...,
         "username":author->username,
+        "likedby":likes[]->username,
         "profilepic":author->photo{
             asset->{
                 _id,
@@ -129,12 +132,14 @@ functions.getPosts=(username)=>{
     }`,{username})
 }
 functions.getPostWithId=(id)=>{
-  return sanityClient.fetch(`*[_type == "post" && _id == $id ]{   ...,
+  return sanityClient.fetch(`*[_type == "post" && _id == $id ]{
+    ...,
     "username":author->username,
+    "likedby":likes[]->username,
     "profilepic":author->photo{
         asset->{
-          _id,
-          url
+            _id,
+            url
         }
     },
     photo{
@@ -143,7 +148,6 @@ functions.getPostWithId=(id)=>{
             url
         }
     }
-    
 }`,{id});
 }
 functions.updateProfile=(user,first_name,last_name,bio,image)=>{
@@ -182,6 +186,7 @@ functions.addLike=(postid,user)=>{
     .setIfMissing({likes:[]})
     .insert("after","likes[-1]",[{_ref:ids[0]._id,_key:nanoid(),_type:"reference"}])
     .commit());
+
 }
 
 functions.removeLike=(postid,user)=>{
@@ -189,4 +194,18 @@ functions.removeLike=(postid,user)=>{
   .unset([`likes[_ref=="${ids[0]._id}"]`])
   .commit());
 }
+
+functions.addComment=(postid,user,description)=>{
+  return sanityClient.patch(postid)
+  .setIfMissing({comments:[]})
+  .insert("after","comments[-1]",[{username:user,description:description,_key:nanoid()}])
+  .commit();
+}
+
+functions.removeComment=(postid,key)=>{
+  return  sanityClient.patch(postid)
+  .unset([`comments[_key=="${key}"]`])
+  .commit();
+}
+
 export default functions;
