@@ -6,9 +6,10 @@ import "../css/Search.css"
 export default function Search(){
     const [searchText,updateSearchText]=useState("");
     const [searchResults,updateSearchResults]=useState([]);
+    const [followersOpen,setFollowersOpen]=useState(false);
     
     function search(){
-        fetch("/searchForUsername?text="+searchText).then((res)=>res.json())
+        fetch("https://uzstragram.herokuapp.com/searchForUsername?text="+searchText).then((res)=>res.json())
         .then((data)=>updateSearchResults(data))
         .catch((err)=>console.error(err));
 
@@ -27,7 +28,7 @@ export default function Search(){
                 <Card style={{width:"100%"}}>
                  <ListGroup variant="flush">
                     { searchResults.map((item,idx)=>
-                        <ProfileItem {...item} idx={idx}></ProfileItem>
+                        <ProfileItem {...item} setFollowersOpen={setFollowersOpen} idx={idx}></ProfileItem>
                     )}
                  </ListGroup>
 

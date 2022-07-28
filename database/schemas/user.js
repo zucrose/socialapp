@@ -19,6 +19,12 @@ export default{
             type:"string"
         },
         {
+            title:"Password",
+            name:"password",
+            type:"string",
+        }
+        ,
+        {
             title:"Photo",
             name:"photo",
             type:"image"

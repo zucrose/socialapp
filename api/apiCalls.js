@@ -4,13 +4,13 @@ import { basename } from "path";
 import { nanoid } from "nanoid";
 const functions= {}
 
-functions.createUser=(firstName,lastName,username)=>{
+functions.createUser=(firstName,lastName,username,password)=>{
     return sanityClient.create({
         _type:"user",
         first_name:firstName,
         last_name:lastName,
         username:username,
-  
+        password:password,
         created_at: new Date(),
     });
 };
@@ -18,8 +18,23 @@ functions.getProfile = (user) => {
     return sanityClient.fetch(
       `*[_type == "user" && username == $username]{
         ...,
-        "following": count(following),
+        "followingData":following[]->{
+          ...,
+            photo{
+          asset->{
+            _id,
+            url
+          }
+         }
+       },
+
         "followers": *[_type == "user" && references(^._id)],
+        "followersphoto": *[_type == "user" && references(^._id)]{
+          photo{
+            asset->{_id,
+            url}
+          }
+        },
         "liked_by": *[_type == "post" && references(^._id) && author->username != $username],
         photo{
           asset->{
@@ -208,4 +223,7 @@ functions.removeComment=(postid,key)=>{
   .commit();
 }
 
+functions.deletePost=(postid)=>{
+ return sanityClient.delete({query: '*[_type ==  "post" && _id == $postid ]', params: {postid}})
+}
 export default functions;

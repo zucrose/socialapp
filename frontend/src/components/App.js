@@ -17,21 +17,22 @@ function App() {
   return (
     <div className="fill-parent">
       <BrowserRouter>
-        <Navbar collapseOnSelect expand="md" bg="dark" variant="dark">
+        <Navbar collapseOnSelect expand="md" bg="dark" variant="dark"> 
           <Container fluid>
             <LinkContainer to="/">
                <Navbar.Brand>Instagram Clone</Navbar.Brand>
             </LinkContainer>
+            <Navbar.Toggle />
             <Navbar.Collapse>
               <Nav className="me-auto">
-                <LinkContainer to="/">
-                   <Nav.Link>Feed</Nav.Link>
+                <LinkContainer   to="/">
+                   <Nav.Link >Feed</Nav.Link>
                 </LinkContainer>
-                <LinkContainer to="/search">
+                <LinkContainer  to="/search">
                    <Nav.Link>Search</Nav.Link>
                 </LinkContainer>
-                <LinkContainer to="/create-post">
-                   <Nav.Link>Post</Nav.Link>
+                <LinkContainer  to="/create-post">
+                   <Nav.Link >Post</Nav.Link>
                 </LinkContainer>
               </Nav>
               <Nav>

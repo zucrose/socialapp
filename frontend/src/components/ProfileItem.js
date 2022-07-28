@@ -1,9 +1,9 @@
 import { Button,ListGroup } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
-export default function ProfileItem({username,first_name,last_name,photo,followers}){
+export default function ProfileItem({username,first_name,last_name,photo,setFollowersOpen}){
     const navigate=useNavigate();
-
+    
     return <ListGroup.Item>
         <div className="d-flex align-items-center justify-content-between">
            <div className="d-flex align-items-center"> 
@@ -22,10 +22,10 @@ export default function ProfileItem({username,first_name,last_name,photo,followe
                 
              </div>
              <div className="d-flex flex-column align-items-center">
-                    <p className="px-2">
-                        <strong>{followers}Followers</strong>
-                    </p>
-                    <Button variant="success" className="px-2 m-0" onClick={()=>navigate("/profile/"+username)}>View</Button>
+                   
+                    <Button variant="success" className="px-2 m-0" onClick={()=>{
+                    setFollowersOpen(false);
+                    navigate("/profile/"+username)}}>View</Button>
                 </div>
       </div>
     </ListGroup.Item>;

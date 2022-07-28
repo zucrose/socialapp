@@ -21,12 +21,7 @@ code {
   display:flex;
   flex-direction: column;
 }
-.center{
-  height: 100%;
-  align-items: center;
-  display: flex;
-  flex-direction: column;
-}
+
 .center-form{
   display: flex;
   align-items: center;

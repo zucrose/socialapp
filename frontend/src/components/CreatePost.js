@@ -26,7 +26,7 @@ export default function CreatePost({user,setAlert}){
         method:"POST",
         body: formData
     }
-    fetch("/createPost",requestOptions).then((_res)=>{
+    fetch("https://uzstragram.herokuapp.com/createPost",requestOptions).then((_res)=>{
         setAlert({variant:"success",message:"Post Created!"});
         navigate("/");
     }).catch((err)=>setAlert({variant:"danger",message:err.message}));
@@ -36,7 +36,7 @@ export default function CreatePost({user,setAlert}){
    return <Form className="post-form">
    <div className="create-post">
     <Form.Group className="mb-3">
-        <img src={ (file) ?( URL.createObjectURL(file)):null} className="post-image"/>
+        <img src={ (file) ?( URL.createObjectURL(file)):null} className="post-image" alt=""/>
     </Form.Group>
     <Form.Group className="mb-3">
         <input type="file" accept="image/*" onChange={uploadFile} />

@@ -13,7 +13,7 @@ export default function Comments({post,user,setPost,reload,setreload})
             },
             body:JSON.stringify({postid:post._id,username:user,description:newComment})
         }
-        fetch("/addComment",requestOptions).then((res)=>res.json()).then((data)=>{setreload(reload+1)
+        fetch("https://uzstragram.herokuapp.com/addComment",requestOptions).then((res)=>res.json()).then((data)=>{setreload(reload+1)
         });
     }
 
@@ -27,10 +27,10 @@ export default function Comments({post,user,setPost,reload,setreload})
             },
             body:JSON.stringify({postid:post._id,key:key})
         }
-        fetch("/removeComment",requestOptions).then((res)=>res.json()).then((data)=>{setreload(reload+1)
+        fetch("https://uzstragram.herokuapp.com/removeComment",requestOptions).then((res)=>res.json()).then((data)=>{setreload(reload+1)
            });
     }
-
+    console.log(post,user);
    
        return (
         
@@ -55,7 +55,9 @@ export default function Comments({post,user,setPost,reload,setreload})
        )
 
            }
+           
        {  (post &&user )?
+      
          <Form> 
            <Form.Group className='mb-3'>
               <Form.Control type="text" placeholder="Comment"  onInput={(e)=> setNewComment(e.target.value)}></Form.Control>

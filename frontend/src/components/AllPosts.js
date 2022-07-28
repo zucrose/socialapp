@@ -13,31 +13,32 @@ export default function AllPosts({user}){
 
     useEffect(()=>{
         if(!user){
-            fetch("/getAllPosts").then((res)=>res.json())
+            fetch("https://uzstragram.herokuapp.com/getAllPosts").then((res)=>res.json())
             .then((data)=> setAllPosts(data)).catch((err)=> console.error(err));
         }
         else{
-            fetch("/getPostsOfFollowing?user="+user).then((res)=>res.json())
+            fetch("https://uzstragram.herokuapp.com/getPostsOfFollowing?user="+user).then((res)=>res.json())
             .then((data)=> setAllPosts(data)).catch((err)=>console.error(err));
         }
-    },[user]);
+    },[user,Open]);
     console.log(AllPostsData);
    
-    return <><div className="center mt-3">
+    return <><div className="postalign align-items-center mt-3 mb-2">
         {AllPostsData? AllPostsData.map((post,index)=>(
                    
-               <div className="center m-2" style={{min_width:"40%" , maxWidth:"45%"}} key={index} >
+               <div className="  m-2" key={index} style={{ minWidth: "40%", maxWidth: "45%"  }}>
                 
                 <Card sx={{
                             backgroundColor: '#e5fcfb',
-                            position: 'relative',
+                           
                             boxShadow: '0 8px 24px 0 rgba(0,0,0,0.12)',
                             overflow: 'visible',
                             borderRadius: '1.5rem',
-                           
+                            
+
 
                             
-                        }} className="cardstyling"
+                        }} 
                         onClick={()=>{setOpen(true);
                          SetPostOpened(post);
                          console.log("this post was clicked",PostOpened,index);
@@ -50,7 +51,7 @@ export default function AllPosts({user}){
                     }
                     
                     avatar={
-                            <Avatar  src={post.profilepic.asset.url}/>
+                            <Avatar  src={post.profilepic?post.profilepic.asset.url:"https://via.placeholder.com/80"} />
                                 
                             }
                     />

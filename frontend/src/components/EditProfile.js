@@ -24,7 +24,7 @@ export default function EditProfile({show,hideCallBack,user,setAlert,profileData
             method: "POST",
             body: formData
         }
-        fetch("/updateProfile",requestOptions).then((res)=> res.json())
+        fetch("https://uzstragram.herokuapp.com/updateProfile",requestOptions).then((res)=> res.json())
         .then((data)=>{setAlert({variant:"success" , message: "profile updated successfully",});
          if(file) data.image_url =URL.createObjectURL(file);
          hideCallBack();
