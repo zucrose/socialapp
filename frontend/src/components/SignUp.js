@@ -52,7 +52,7 @@ export default function SignUp({ setAlert, setUser }) {
       }),
     };
 
-    fetch("https://uzstragram.herokuapp.com/createUser", requestOptions)
+    fetch("https://uzstragram.onrender.com/createUser", requestOptions)
       .then((_res) => {
         return _res.json();
       })
@@ -129,7 +129,7 @@ export default function SignUp({ setAlert, setUser }) {
           </div>
 
           <Button type="submit" className="btn btn-primary">
-            Sign Up 
+            Sign Up
           </Button>
         </Form>
       </Formik>

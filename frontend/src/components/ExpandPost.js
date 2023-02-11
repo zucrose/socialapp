@@ -19,7 +19,7 @@ export default function ExpandPost({ postprop, Open, setOpen, user }) {
 
   useEffect(() => {
     console.log("use Effect triggered", user, postprop);
-    fetch("https://uzstragram.herokuapp.com/getPostWithId?id=" + postprop._id)
+    fetch("https://uzstragram.onrender.com/getPostWithId?id=" + postprop._id)
       .then((res) => res.json())
       .then((data) => {
         setPost(data[0]);
@@ -46,13 +46,13 @@ export default function ExpandPost({ postprop, Open, setOpen, user }) {
       },
       body: JSON.stringify({ postid: post._id, user: user }),
     };
-    fetch("https://uzstragram.herokuapp.com/addLike", requestOptions)
+    fetch("https://uzstragram.onrender.com/addLike", requestOptions)
       .then((res) => res.json())
       .then((data) => {
         setreload(reload + 1);
       });
   }
-  
+
   function removeLike() {
     const requestOptions = {
       method: "DELETE",
@@ -61,22 +61,26 @@ export default function ExpandPost({ postprop, Open, setOpen, user }) {
       },
       body: JSON.stringify({ postid: post._id, user: user }),
     };
-    fetch("https://uzstragram.herokuapp.com/removeLike", requestOptions)
+    fetch("https://uzstragram.onrender.com/removeLike", requestOptions)
       .then((res) => res.json())
       .then((data) => {
         setreload(reload + 1);
       });
   }
-  function deletePost(){
-    const requestOptions={
+  function deletePost() {
+    const requestOptions = {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ id: post._id}),
-    }
-    console.log("delete called")
-    fetch("https://uzstragram.herokuapp.com/deletePostWithId",requestOptions).then((res)=>res.json()).then((data)=>{setOpen(false)})
+      body: JSON.stringify({ id: post._id }),
+    };
+    console.log("delete called");
+    fetch("https://uzstragram.onrender.com/deletePostWithId", requestOptions)
+      .then((res) => res.json())
+      .then((data) => {
+        setOpen(false);
+      });
   }
 
   if (Open === true && post) {
@@ -103,11 +107,19 @@ export default function ExpandPost({ postprop, Open, setOpen, user }) {
                   {post.username}
                 </Link>
               }
-              avatar={<Avatar src={post.profilepic?post.profilepic.asset.url:"https://via.placeholder.com/80"} />}
+              avatar={
+                <Avatar
+                  src={
+                    post.profilepic
+                      ? post.profilepic.asset.url
+                      : "https://via.placeholder.com/80"
+                  }
+                />
+              }
             />
             <div className="d-flex justify-content-between">
               <div className="d-flex flex-column w-100">
-                <div >
+                <div>
                   <CardMedia
                     component="img"
                     variant="top"
@@ -155,30 +167,35 @@ export default function ExpandPost({ postprop, Open, setOpen, user }) {
                   </Typography>
 
                   <h4>Comments</h4>
-              
+
                   {post.comments.length === 0 ? (
                     <Typography className="text-muted">
                       This post has no comments{" "}
                     </Typography>
-                  ) : (
-                    null
-                  )}
+                  ) : null}
                   <Comments
-                      post={post}
-                      user={user}
-                      setPost={setPost}
-                      reload={reload}
-                      setreload={setreload}
-                    ></Comments>
+                    post={post}
+                    user={user}
+                    setPost={setPost}
+                    reload={reload}
+                    setreload={setreload}
+                  ></Comments>
                   <br></br>
-                  <div className='d-flex  justify-content-between'>
-                  <Typography className="text-muted" variant="overline">
-                    {postdate}
-                  </Typography>
-                  {(post.username===user)?
-                  <span  className="fa fa-trash m-2 fa-2x"  onClick={()=>deletePost()}  > </span>:console.log("author",post.username,"user",user)}
+                  <div className="d-flex  justify-content-between">
+                    <Typography className="text-muted" variant="overline">
+                      {postdate}
+                    </Typography>
+                    {post.username === user ? (
+                      <span
+                        className="fa fa-trash m-2 fa-2x"
+                        onClick={() => deletePost()}
+                      >
+                        {" "}
+                      </span>
+                    ) : (
+                      console.log("author", post.username, "user", user)
+                    )}
                   </div>
-                  
                 </CardContent>
               </div>
             </div>

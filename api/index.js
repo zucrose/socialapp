@@ -1,4 +1,4 @@
-import express, { application } from "express";
+import express from "express";
 import bodyParser from "body-parser";
 import functions from "./apiCalls.js";
 import multer from "multer";

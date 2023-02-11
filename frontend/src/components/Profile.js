@@ -20,7 +20,7 @@ export default function Profile({ user, setAlert }) {
   const params = useParams();
   useEffect(() => {
     updateProfile(params.username);
-  }, [params.username, user, Open ]);
+  }, [params.username, user, Open]);
 
   function updateFollowing(profile) {
     for (let follower of profile.followers) {
@@ -32,7 +32,7 @@ export default function Profile({ user, setAlert }) {
     setFollowing(false);
   }
   function updateProfile(username) {
-    fetch("https://uzstragram.herokuapp.com/getProfile?user=" + username)
+    fetch("https://uzstragram.onrender.com/getProfile?user=" + username)
       .then((res) => res.json())
       .then((data) => {
         if (data.length === 0) {
@@ -40,7 +40,7 @@ export default function Profile({ user, setAlert }) {
           return;
         }
         console.log(data[0]);
-        fetch("https://uzstragram.herokuapp.com/getPosts?user=" + username)
+        fetch("https://uzstragram.onrender.com/getPosts?user=" + username)
           .then((res) => res.json())
           .then((posts) => {
             setProfileData(data[0]);
@@ -61,7 +61,7 @@ export default function Profile({ user, setAlert }) {
         },
         body: JSON.stringify({ user: user, id: profileData._id }),
       };
-      fetch("https://uzstragram.herokuapp.com/addFollower", requestOptions)
+      fetch("https://uzstragram.onrender.com/addFollower", requestOptions)
         .then((res) => res.json())
         .then((data) => updateProfile(params.username));
     } else {
@@ -72,7 +72,7 @@ export default function Profile({ user, setAlert }) {
         },
         body: JSON.stringify({ user: user, id: profileData._id }),
       };
-      fetch("https://uzstragram.herokuapp.com/removeFollower", requestOptions)
+      fetch("https://uzstragram.onrender.com/removeFollower", requestOptions)
         .then((res) => res.json())
         .then((data) => updateProfile(params.username));
     }
